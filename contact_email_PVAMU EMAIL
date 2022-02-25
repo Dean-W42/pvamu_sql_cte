@@ -1,0 +1,28 @@
+-- PULLS FROM SFRSTCR
+
+pveml     as (select        distinct "pveml_pidm", coalesce(pv1,pv2,pv3,pv4,pv5)"pvamu_email"
+        from (select        sfrstcr_pidm "pveml_pidm",                                
+             (select       "pv1" from(select goremal_pidm"pv1_pidm", goremal_email_address"pv1" from goremal@prod where goremal_emal_code='PVEM' and exists(select stvcsta_code from stvcsta where stvcsta_code=goremal_status_ind and stvcsta_code='A')) 
+              where        "pv1_pidm"=sfrstcr_pidm) pv1,
+             (select       "pv2" from(select goremal_pidm"pv2_pidm", goremal_email_address"pv2" from goremal@prod where goremal_emal_code='PVEM' and exists(select stvcitz_code from stvcitz where stvcitz_code=goremal_preferred_ind and stvcitz_code='Y') and exists(select stvcsta_code from stvcsta where stvcsta_code=goremal_status_ind and stvcsta_code='A')) 
+              where        "pv2_pidm"=sfrstcr_pidm) pv2,
+             (select       "pv3" from(select goremal_pidm"pv3_pidm", goremal_email_address"pv3" from goremal@prod where goremal_emal_code='FACU' and exists(select stvcitz_code from stvcitz where stvcitz_code=goremal_preferred_ind and stvcitz_code='Y') and exists(select stvcsta_code from stvcsta where stvcsta_code=goremal_status_ind and stvcsta_code='A')) 
+              where        "pv3_pidm"=sfrstcr_pidm) pv3,
+             (select       "pv4" from(select goremal_pidm"pv4_pidm", goremal_email_address"pv4" from goremal@prod where goremal_emal_code='UNIV' and exists(select stvcitz_code from stvcitz where stvcitz_code=goremal_preferred_ind and stvcitz_code='Y') and exists(select stvcsta_code from stvcsta where stvcsta_code=goremal_status_ind and stvcsta_code='A')) 
+              where        "pv4_pidm"=sfrstcr_pidm) pv4,             
+             (select       "pv5" from(select goremal_pidm"pv5_pidm", goremal_email_address"pv5" from goremal@prod where goremal_emal_code='UNIV' and exists(select stvcitz_code from stvcitz where stvcitz_code=goremal_preferred_ind and stvcitz_code='N') and exists(select stvcsta_code from stvcsta where stvcsta_code=goremal_status_ind and stvcsta_code='A')) 
+              where        "pv5_pidm"=sfrstcr_pidm) pv5
+              from          sfrstcr@prod   
+              where         sfrstcr_term_code='202210'
+  and exists (select        stvrsts_code from stvrsts where stvrsts_code=sfrstcr_rsts_code and stvrsts_voice_type='R')))
+
+
+-- PULLS FROM CTE A
+
+pveml   as (select       "pveml_pidm", coalesce(pv1,pv2,pv3,pv4)"pvamu_email"
+      from (select       "pidm" "pveml_pidm",                                
+           (select       "pv1" from(select w.goremal_pidm"pv1_pidm", w.goremal_email_address"pv1" from general.goremal@prod w where w.goremal_emal_code = 'PVEM' and w.goremal_status_ind = 'A' and w.goremal_pidm in(select "pidm" from a)) where "pv1_pidm" = "pidm") pv1,
+           (select       "pv2" from(select x.goremal_pidm"pv2_pidm", x.goremal_email_address"pv2" from general.goremal@prod x where x.goremal_emal_code = 'UNIV' and x.goremal_preferred_ind = 'Y' and x.goremal_status_ind = 'A' and x.goremal_pidm in(select "pidm" from a)) where "pv2_pidm" = "pidm") pv2,
+           (select       "pv3" from(select y.goremal_pidm"pv3_pidm", y.goremal_email_address"pv3" from general.goremal@prod y where y.goremal_emal_code = 'FACU' and y.goremal_preferred_ind = 'Y' and y.goremal_status_ind = 'A' and y.goremal_pidm in(select "pidm" from a)) where "pv3_pidm" = "pidm") pv3,
+           (select       "pv4" from(select z.goremal_pidm"pv4_pidm", z.goremal_email_address"pv4" from general.goremal@prod z where z.goremal_emal_code = 'UNIV' and z.goremal_preferred_ind = 'N' and z.goremal_status_ind = 'A' and z.goremal_pidm in(select "pidm" from a)) where "pv4_pidm" = "pidm") pv4
+            from          a))
