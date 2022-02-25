@@ -1,0 +1,32 @@
+-- PULLS FROM CTE A
+-- STVRSTS_VOICE_TYPE='R'
+-- CHANGE CODE FOR DESIRED SFRSTCR_TERM_CODE
+
+
+enrl      as (select       "enrl_pidm", "term"
+        from (select        x.sfrstcr_pidm"enrl_pidm", x.sfrstcr_term_code"term", row_number()
+        over (partition by  x.sfrstcr_pidm
+              order by      x.sfrstcr_crn asc nulls last) rn
+              from          saturn.sfrstcr@prod x
+              where         x.sfrstcr_rsts_code in (select y.stvrsts_code from saturn.stvrsts y where y.stvrsts_voice_type='R')
+              and           x.sfrstcr_term_code 
+              =            '202220'
+              and           x.sfrstcr_pidm in (select "pidm" from a))
+              where         rn = 1)
+
+
+                           "term",
+        case  when         "term" is not null then 'Yes' else 'No' end "enrolled"
+
+
+   left join  enrl      on "enrl_pidm" = "pidm"
+
+
+
+/*
+--SELECT plan_table_output FROM TABLE(DBMS_XPLAN.DISPLAY());
+--explain plan for
+--  ner join (select       "xx
+
+
+###
