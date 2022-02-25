@@ -1,0 +1,26 @@
+-- first enrolled term from sfrstcr where stvrsts_auto_grade is not null or stvrsts_gradable_ind='Y'
+
+term1     as (select       "term1_pidm", "term1_enrl"
+        from (select        x.sfrstcr_pidm"term1_pidm", x.sfrstcr_term_code"term1_enrl", row_number()
+        over (partition by  x.sfrstcr_pidm
+              order by      x.sfrstcr_term_code asc nulls last) rn
+              from          saturn.sfrstcr@prod x  
+              where         x.sfrstcr_rsts_code in(select y.stvrsts_code from stvrsts y where(y.stvrsts_auto_grade is not null or y.stvrsts_gradable_ind='Y')) 
+              and           x.sfrstcr_term_code>='200910'
+              and           x.sfrstcr_pidm in(select "pidm" from a))
+              where         rn=1)
+
+                           "term_enrl",
+             (select        stvterm_desc from saturn.stvterm where stvterm_code = "term1_enrl") "first_enrolled",
+
+
+   left join  term1     on "term1_pidm"="pidm"
+
+
+/*
+--SELECT plan_table_output FROM TABLE(DBMS_XPLAN.DISPLAY());
+--explain plan for
+--  ner join (select       "xx
+
+
+###
