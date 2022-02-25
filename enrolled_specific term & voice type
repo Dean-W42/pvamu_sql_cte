@@ -8,10 +8,10 @@ enrl      as (select       "enrl_pidm", "term"
         over (partition by  x.sfrstcr_pidm
               order by      x.sfrstcr_crn asc nulls last) rn
               from          saturn.sfrstcr@prod x
-              where         x.sfrstcr_rsts_code in (select y.stvrsts_code from saturn.stvrsts y where y.stvrsts_voice_type='R')
+              where         x.sfrstcr_rsts_code in(select y.stvrsts_code from saturn.stvrsts y where y.stvrsts_voice_type='R')
               and           x.sfrstcr_term_code 
               =            '202220'
-              and           x.sfrstcr_pidm in (select "pidm" from a))
+              and           x.sfrstcr_pidm in(select "pidm" from a))
               where         rn = 1)
 
 
