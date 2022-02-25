@@ -1,0 +1,15 @@
+-- MAX ADDRESS BY ACTIVITY DATE
+
+addr    as (select       "addr_pidm", "addr_1", "addr_2", "city", "st", "zip_code", "natn"     
+      from (select        spraddr_pidm"addr_pidm", spraddr_street_line1"addr_1", spraddr_street_line2||spraddr_street_line3"addr_2", spraddr_city"city", spraddr_stat_code"st", spraddr_zip"zip_code", spraddr_natn_code"natn", row_number() 
+      over (partition by  spraddr_pidm 
+  order by  to_char      (spraddr_activity_date,'yyyymmdd') desc nulls last, spraddr_surrogate_id desc nulls last) rn 
+            from          saturn.spraddr@prod 
+            where         spraddr_atyp_code in('AA','AB','AD','AH','AS','BI','BU','FA','MA','PA')  
+            and           spraddr_status_ind is null 
+            and           spraddr_pidm in(select "pidm" from a)) 
+            where         rn=1) 
+
+
+           "addr_1", "addr_2", "city", "st", "zip_code", 
+   (select  stvnatn_nation from saturn.stvnatn where stvnatn_code = "natn" and stvnatn_code not in('157','ZZZ')) "nation"
