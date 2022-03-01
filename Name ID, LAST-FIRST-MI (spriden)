@@ -1,0 +1,17 @@
+-- pvamu_id, last_name, first_name, mi_name
+
+
+name      as (select        y.spriden_pidm"name_pidm", y.spriden_id"pvamu_id", y.spriden_last_name"last_name", y.spriden_first_name"first_name", y.spriden_mi"mi_name"
+              from          spriden@prod y
+              where         y.spriden_change_ind is null   
+              and           y.spriden_entity_ind='P'  
+              and           y.spriden_pidm in(select "pidm" from a))
+              
+              
+                           "pvamu_id", "last_name", "first_name", "mi_name"
+                           
+                           
+   left join  name      on "name_pidm"="pidm"
+
+
+###
