@@ -1,0 +1,17 @@
+-- ug hours earned 
+
+
+clas      as (select        x.shrlgpa_pidm"clas_pidm", x.shrlgpa_hours_earned"hrs"
+              from          saturn.shrlgpa@prod x
+              where         x.shrlgpa_gpa_type_ind='O'
+              and           x.shrlgpa_levl_code='UG' 
+              and           x.shrlgpa_pidm in(select "pidm" from a))
+              
+              
+        case  when         "hrs" > 89 then 'Senior' when "hrs" > 59 then 'Junior' when "hrs" > 29 then 'Sophomore' else 'Freshman' end "classification",
+
+
+   left join  clas      on "clas_pidm"="pidm"
+   
+   
+###
