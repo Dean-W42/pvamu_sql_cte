@@ -1,0 +1,19 @@
+-- only want students whose level is undergraduate
+
+
+levl      as (select       "levl_pidm", "lvl"
+        from (select        l.sgbstdn_pidm"levl_pidm", l.sgbstdn_levl_code"lvl", row_number()
+        over (partition by  l.sgbstdn_pidm
+              order by      l.sgbstdn_term_code_eff desc nulls last) rn
+              from          sgbstdn@prod l
+              where         l.sgbstdn_term_code_eff between '200910' and '202220'
+              and           l.sgbstdn_pidm in(select "pidm" from a))
+              where         rn=1
+              and          "lvl"='UG')
+              
+                           "lvl",
+
+  inner join  levl      on "levl_pidm"="pidm" 
+
+
+###
